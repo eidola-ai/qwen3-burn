@@ -1888,7 +1888,7 @@ mod tests {
         use burn::backend::NdArray;
 
         type B = NdArray;
-        let dev: <B as burn::prelude::Backend>::Device = Default::default();
+        let dev: burn::prelude::Device<B> = Default::default();
 
         let transformer = Transformer::<B>::new(100, 32, 2, 4, 2, 8, 64, 1e-6, false, None, &dev);
         let transformer = apply_quantization(transformer, QuantizationMode::None);
@@ -1915,7 +1915,7 @@ mod tests {
         use burn::backend::NdArray;
 
         type B = NdArray;
-        let dev: <B as burn::prelude::Backend>::Device = Default::default();
+        let dev: burn::prelude::Device<B> = Default::default();
 
         let transformer = Transformer::<B>::new(100, 32, 2, 4, 2, 8, 64, 1e-6, false, None, &dev);
         let transformer = apply_quantization(transformer, QuantizationMode::Int8);
@@ -1942,7 +1942,7 @@ mod tests {
         use burn::backend::NdArray;
 
         type B = NdArray;
-        let dev: <B as burn::prelude::Backend>::Device = Default::default();
+        let dev: burn::prelude::Device<B> = Default::default();
 
         let transformer = Transformer::<B>::new(100, 32, 2, 4, 2, 8, 64, 1e-6, false, None, &dev);
         let transformer = apply_quantization(transformer, QuantizationMode::Int4);

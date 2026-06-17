@@ -1143,7 +1143,7 @@ mod tests {
 
     type B = NdArray;
 
-    fn device() -> <B as Backend>::Device {
+    fn device() -> burn::prelude::Device<B> {
         Default::default()
     }
 
