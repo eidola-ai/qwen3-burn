@@ -30,11 +30,7 @@ rand = "0.10"
 half = { version = "2.4", features = ["serde"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", optional = true }
-# NOTE: the burn-0.21 port of burn-mlx lives on its `burn-0-21` branch. Until that
-# branch is published, the git ref stays on `main` (resolvable) and is redirected to
-# the local checkout via the [patch] section below. Flip to `branch = "burn-0-21"`
-# and drop the patch once the branch is pushed.
-burn-mlx = { git = "https://github.com/eidolons-ai/burn-mlx.git", branch = "main", optional = true }
+burn-mlx = { git = "https://github.com/eidolons-ai/burn-mlx.git", branch = "burn-0-21", optional = true }
 image = { version = "0.25", optional = true, default-features = false, features = ["png", "jpeg"] }
 
 [dev-dependencies]
@@ -49,8 +45,3 @@ required-features = ["vision"]
 [[bench]]
 name = "ops"
 harness = false
-
-# Local development override: build against the local burn-0-21 branch of
-# burn-mlx before it is pushed. Remove once the branch is published.
-[patch."https://github.com/eidolons-ai/burn-mlx.git"]
-burn-mlx = { path = "/Users/mike/Code/burn-mlx" }
