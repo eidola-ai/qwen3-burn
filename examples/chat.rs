@@ -49,9 +49,34 @@ struct Args {
     #[arg(long, default_value = "auto")]
     format: String,
 
+    /// Float dtype for the wgpu/metal backends: f16, f32 (f16 halves memory and is
+    /// typically faster; use f32 on drivers where f16 compute is broken, e.g. Mesa
+    /// Vulkan on Intel Battlemage)
+    #[arg(long, default_value = "f16")]
+    dtype: String,
+
     /// Random seed
     #[arg(long, default_value_t = 42)]
     seed: u64,
+}
+
+#[cfg(any(feature = "wgpu", feature = "metal"))]
+#[derive(Clone, Copy)]
+enum Dtype {
+    F16,
+    F32,
+}
+
+#[cfg(any(feature = "wgpu", feature = "metal"))]
+fn parse_dtype(s: &str) -> Dtype {
+    match s {
+        "f16" => Dtype::F16,
+        "f32" => Dtype::F32,
+        other => {
+            eprintln!("Unknown dtype '{}', using f16", other);
+            Dtype::F16
+        }
+    }
 }
 
 fn parse_quantization(s: &str) -> QuantizationMode {
@@ -205,7 +230,10 @@ fn main() {
         use burn::backend::Wgpu;
         use burn::tensor::f16;
         let device = WgpuDevice::default();
-        run::<Wgpu<f16, i32>>(args, device);
+        match parse_dtype(&args.dtype) {
+            Dtype::F16 => run::<Wgpu<f16, i32>>(args, device),
+            Dtype::F32 => run::<Wgpu<f32, i32>>(args, device),
+        }
     }
 
     #[cfg(feature = "ndarray")]
@@ -238,7 +266,10 @@ fn main() {
         use burn::backend::Wgpu;
         use burn::tensor::f16;
         let device = WgpuDevice::default();
-        run::<Wgpu<f16, i32>>(args, device);
+        match parse_dtype(&args.dtype) {
+            Dtype::F16 => run::<Wgpu<f16, i32>>(args, device),
+            Dtype::F32 => run::<Wgpu<f32, i32>>(args, device),
+        }
     }
 
     #[cfg(not(any(
